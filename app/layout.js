@@ -1,7 +1,7 @@
 import './globals.css';
 import { AuthProvider } from '../contexts/AuthContext'; 
 import RegisterServiceWorker from './register-service-worker';
-import PrivateRoute from '../components/PrivateRoute'; 
+import Head from 'next/head'; 
 import localFont from "next/font/local";
 import Navbar from '../components/Navbar';
 

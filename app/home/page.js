@@ -27,7 +27,7 @@ export default function Home() {
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState('');
   const [completed, setCompleted] = useState(false);
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isOffline, setIsOffline] = useState(false);
   const today = format(new Date(), 'yyyy-MM-dd');
 
   const loadTasks = async () => {
@@ -103,6 +103,12 @@ export default function Home() {
 
   const groupByDate = (tasks) => {
     const grouped = tasks.reduce((groups, task) => {
+
+      if (!task.date) {
+        console.error('Tarefa sem data:', task);
+        return groups; // Pula essa tarefa se não tiver data
+      }
+
       const taskDate = parseISO(task.date);
       const formattedDate = format(taskDate, 'yyyy-MM-dd');
 
@@ -127,6 +133,16 @@ export default function Home() {
   const groupedTasks = groupByDate(tasks);
 
   useEffect(() => {
+
+    const loadAnalytics = async () => {
+      await AnalyticsInit();
+    };
+
+    if(typeof window !== 'undefined'){
+      setIsOffline(!navigator.onLine);
+      loadAnalytics();
+    }
+
     requestNotificationPermission();
     loadTasks();
 
@@ -144,14 +160,6 @@ export default function Home() {
     window.addEventListener('online', handleOfflineStatus);
     window.addEventListener('offline', handleOfflineStatus);
 
-
-    const loadAnalytics = async () => {
-      await AnalyticsInit();
-    }
-
-    if(typeof window !== 'undefined'){
-      loadAnalytics();
-    }
 
     return () => {
       window.removeEventListener('online', handleOfflineStatus);
@@ -219,6 +227,7 @@ export default function Home() {
                       <span className="text-red-500">Não Concluída</span>
                     )}
                   </span>
+                
                 </li>
               ))}
             </ul>
