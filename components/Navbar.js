@@ -23,24 +23,24 @@ const Navbar = () => {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-blue-500 text-white p-4">
+    <nav className="bg-red-500 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo ou Nome do App */}
         <div className="text-2xl font-bold">
-          <Link href="/home">My Tasks App</Link>
+          <Link href="/home">Controle de Tarefas</Link>
         </div>
 
         {/* Menu Normal */}
         <div className="hidden md:flex space-x-6">
           {user && (
             <>
-              <Link href="/home" className="hover:text-gray-300">Home</Link>
-              <Link href="/profile" className="hover:text-gray-300">Profile</Link>
+              <Link href="/home" className="hover:text-gray-300">Lista</Link>
+              <Link href="/profile" className="hover:text-gray-300">Perfil</Link>
             </>
           )}
           {user ? (
             <button onClick={handleLogout} className="hover:text-gray-300">
-              Logout
+              Sair
             </button>
           ) : (
             <Link href="/" className="hover:text-gray-300">Login</Link>
