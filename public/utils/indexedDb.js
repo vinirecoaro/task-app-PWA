@@ -19,6 +19,31 @@ export const openIndexedDB = () => {
     });
 };
 
+export const deleteTaskFromIndexedDb = async (id) => {
+    try {
+      const db = await openIndexedDB(); // Abre o IndexedDB usando sua função existente
+      const transaction = db.transaction('tasks', 'readwrite');
+      const objectStore = transaction.objectStore('tasks');
+  
+      const deleteRequest = objectStore.delete(id);
+  
+      deleteRequest.onsuccess = () => {
+        console.log(`Tarefa com ID ${id} deletada com sucesso.`);
+      };
+  
+      deleteRequest.onerror = (event) => {
+        console.error('Erro ao deletar tarefa:', event);
+      };
+  
+      transaction.oncomplete = () => {
+        db.close(); // Fecha o banco após completar a transação
+      };
+    } catch (error) {
+      console.error('Erro ao abrir o IndexedDB:', error);
+    }
+  };
+  
+
 export const addTask = async (task) => {
     try {
         const db = await openIndexedDB();

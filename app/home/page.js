@@ -4,7 +4,7 @@ import PrivateRoute from '@/components/PrivateRoute';
 import { useState, useEffect } from 'react';
 import { format, parseISO, setDate } from 'date-fns';
 import { addTaskToFirestore, AnalyticsInit, getTasksFromFirestore, deleteTaskFromFirestore } from '../../public/utils/firebase';
-import { addTask, getTasks } from '../../public/utils/indexedDb';
+import { addTask, getTasks, deleteTaskFromIndexedDb } from '../../public/utils/indexedDb';
 
 const requestNotificationPermission = () => {
   if (Notification.permission === 'default') {
@@ -106,6 +106,8 @@ export default function Home() {
       if(navigator.onLine){
         await deleteTaskFromFirestore(taskId)
       }
+      await deleteTaskFromIndexedDb(taskId)
+      loadTasks()
     }catch(error){
       console.error("Erro ao excluir tarefa: ", error)
     }
