@@ -3,7 +3,7 @@
 import PrivateRoute from '@/components/PrivateRoute';
 import { useState, useEffect } from 'react';
 import { format, parseISO, setDate } from 'date-fns';
-import { addTaskToFirestore, AnalyticsInit, getTasksFromFirestore } from '../../public/utils/firebase';
+import { addTaskToFirestore, AnalyticsInit, getTasksFromFirestore, deleteTaskFromFirestore } from '../../public/utils/firebase';
 import { addTask, getTasks } from '../../public/utils/indexedDb';
 
 const requestNotificationPermission = () => {
@@ -100,6 +100,16 @@ export default function Home() {
     setDateTime('');
     setCompleted(false);
   };
+
+  const handleDeleteTask = async (taskId) => {
+    try{
+      if(navigator.onLine){
+        await deleteTaskFromFirestore(taskId)
+      }
+    }catch(error){
+      console.error("Erro ao excluir tarefa: ", error)
+    }
+  }
 
   const groupByDate = (tasks) => {
     const grouped = tasks.reduce((groups, task) => {
@@ -227,6 +237,28 @@ export default function Home() {
                       <span className="text-red-500">Não Concluída</span>
                     )}
                   </span>
+                  <div className="flex space-x-2">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleDeleteTask(task.id)}
+                    >
+                      {/* Ícone de lixeira */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19.5 6.75l-1.5 12.75A2.25 2.25 0 0115.75 21H8.25a2.25 2.25 0 01-2.25-1.5L4.5 6.75M10.5 10.5v6M13.5 10.5v6M5.25 6.75h13.5M9 6.75V4.5A1.5 1.5 0 0110.5 3h3A1.5 1.5 0 0115 4.5v2.25"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -251,34 +283,8 @@ export default function Home() {
               </span>
               <div className="flex space-x-2">
                 <button
-                  className="text-blue-500 hover:text-blue-700"
-                  // onClick={() => handleEdit(task.id)}
-                >
-                  {/* Ícone de lápis */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.862 3.487a2.25 2.25 0 013.182 3.182l-10.9 10.9-4.621 1.158 1.158-4.62 10.9-10.9z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.003 7.488l-4.621 4.621"
-                    />
-                  </svg>
-                </button>
-                <button
                   className="text-red-500 hover:text-red-700"
-                  // onClick={() => handleDelete(task.id)}
-                >
+                  onClick={() => handleDeleteTask(task.id)}>
                   {/* Ícone de lixeira */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

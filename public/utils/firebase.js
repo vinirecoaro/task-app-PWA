@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -72,6 +72,27 @@ export const getTasksFromFirestore = async () => {
         return [];
     }
 };
+
+export const deleteTaskFromFirestore = async (taskId) => {
+    try {
+        let firestoreId = ""
+        const querySnapshot = await getDocs(collection(db, 'tasks'));
+        querySnapshot.forEach(doc => {
+            if(doc.data().id == taskId){
+                firestoreId = doc.id
+            }else{
+                console.error("Erro ao excluir tarefa -> Tarefa não encontrada")
+                return [];
+            }
+        })
+        const taskDocRef = doc(db, 'tasks',firestoreId);
+        await deleteDoc(taskDocRef);
+        console.log("Tarefa deletada com sucesso:", taskId);
+    } catch (error) {
+        console.error("Erro ao deletar tarefa do Firestore: ", error)
+        return [];
+    }
+}
 
 export const signUp = async (email, password, displayName) => {
     try {
