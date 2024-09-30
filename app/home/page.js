@@ -244,6 +244,7 @@ export default function Home() {
                       className="text-red-500 hover:text-red-700"
                       onClick={() => handleDeleteTask(task.id)}
                     >
+                      
                       {/* Ícone de lixeira */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -286,7 +287,8 @@ export default function Home() {
               <div className="flex space-x-2">
                 <button
                   className="text-red-500 hover:text-red-700"
-                  onClick={() => handleDeleteTask(task.id)}>
+                  onClick={() => handleDeleteTask(task.id)}
+                  >
                   {/* Ícone de lixeira */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
